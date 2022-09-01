@@ -9,11 +9,11 @@
 - #### 01 Clone this project
 
 ```bash
-https://github.com/mnomanme/sweet-breakup-sqa.git
+https://github.com/mnomanme/APITestingPostman.git
 ```
 
 ```bash
-cd 02-API-testing-with-postman-assignment
+cd APITestingPostman
 ```
 
 - #### 02 Open with any code editor (Ex-VS Code) and open terminal inside the project folder
