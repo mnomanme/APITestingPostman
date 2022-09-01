@@ -25,7 +25,7 @@ cd APITestingPostman
 ```bash
 npm install/ npm i or yarn install
 
-npx newman run .collection/assignment-api.json
+npx newman run .collection/test_api.json
 
 npm test or yarn test
 ```
