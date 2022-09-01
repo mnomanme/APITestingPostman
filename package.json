@@ -1,0 +1,14 @@
+{
+	"name": "02-assignment-api-test-postamn",
+	"version": "1.0.0",
+	"description": "assignment test api with postman",
+	"main": "main.js",
+	"scripts": {
+		"test": "node main.js"
+	},
+	"author": "Muhammad Noman",
+	"license": "ISC",
+	"dependencies": {
+		"newman-reporter-htmlextra": "^1.22.9"
+	}
+}

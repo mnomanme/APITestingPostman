@@ -1,0 +1,662 @@
+{
+	"info": {
+		"_postman_id": "a13cbe4d-2f70-485b-b3a4-72d27871bf52",
+		"name": "Assignment API testing with Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21523077"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",  () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User should be successfully login\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.includes('Login successfully');\r",
+							"});\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"const showToken = jsonData.token;\r",
+							"\r",
+							"pm.collectionVariables.set('myToken', showToken);\r",
+							"pm.environment.set('myToken', showToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"noman@neitfy.com\",\r\n    \"password\":\"@12345?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{myUrl}}/user/login",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login with wrong email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\",  () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Using wrong email user should be unauthorized\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.includes('User not found');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"noman@gmail.com\",\r\n    \"password\": \"@1234\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{myUrl}}/user/login",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login with wrong password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\",  () => {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Using wrong password user should be unauthorized\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.includes('Password incorrect');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"noman@neitfy.com\",\r\n    \"password\": \"@1234\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{myUrl}}/user/login",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",  ()=> {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User list should be showed successfully\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.includes('User list');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User get first id should be 1\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.users[0].id).to.eql(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{myToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{myUrl}}/user/list",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list with wrong token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\",  ()=> {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User cannot access with wrong token\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.error.message).to.includes('Token expired!');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "fijdn+45641",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{myUrl}}/user/list",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user list without token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\",  ()=> {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User should be get a no token found message\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.error.message).to.includes('No Token Found!');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{myUrl}}/user/list",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomNumbers = _.random(100000000, 999999999);\r",
+							"const phoneCode = '+8801';\r",
+							"const nidCode = '080';\r",
+							"const phoneNumber = phoneCode + randomNumbers; \r",
+							"const nidNumber = nidCode + randomNumbers; \r",
+							"\r",
+							"pm.collectionVariables.set('phoneNumber', phoneNumber);\r",
+							"pm.environment.set('phoneNumber', phoneNumber);\r",
+							"pm.collectionVariables.set('nidNumber', nidNumber);\r",
+							"pm.environment.set('nidNumber', nidNumber);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"const randomId = jsonData.user.id;\r",
+							"\r",
+							"pm.collectionVariables.set('id',randomId);\r",
+							"pm.environment.set('id',randomId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User should be created successfully\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.include(\"User created successfully\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{myToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{secretKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"{{$randomFullName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\":\"{{$randomPassword}}\",\r\n    \"phone_number\": \"{{phoneNumber}}\",\r\n    \"nid\":\"{{nidNumber}}\",\r\n    \"role\":\"Customer\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{myUrl}}/user/create",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an existing user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 208\", () => {\r",
+							"    pm.response.to.have.status(208);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"If user is exists should not be created\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.include(\"User already exists\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{myToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{secretKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"name\": \"Muhammad Noman\",\r\n    \"email\": \"noman@neitfy.com\",\r\n    \"password\": \"@12345?\",\r\n    \"phone_number\": \"013464895300\",\r\n    \"nid\": \"034946794\",\r\n    \"role\": \"customer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{myUrl}}/user/create",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search new customer by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User search new customer by id\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.user.id).to.eql(pm.collectionVariables.get(\"id\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{myToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{secretKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{myUrl}}/user/search?id={{id}}",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"search"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update only phone number by the the customer id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomNumbers = _.random(100000000, 999999999);\r",
+							"const phoneCode = '+8801';\r",
+							"const updatedPhoneNumbers = phoneCode + randomNumbers;\r",
+							"\r",
+							"pm.collectionVariables.set('updatedPhoneNumbers', updatedPhoneNumbers)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User phone number should be updated\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.includes('User updated successfully');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{myToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{secretKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone_number\" : \"{{updatedPhoneNumbers}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{myUrl}}/user/update/{{id}}",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"update",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User should be deleted\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.includes('User deleted successfully');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{myToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-AUTH-SECRET-KEY",
+						"value": "{{secretKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{myUrl}}/user/delete/{{id}}",
+					"host": [
+						"{{myUrl}}"
+					],
+					"path": [
+						"user",
+						"delete",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "myUrl",
+			"value": "http://dmoney.professionaltrainingbd.com",
+			"type": "string"
+		},
+		{
+			"key": "myToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5vbWFuQG5laXRmeS5jb20iLCJwYXNzd29yZCI6IkAxMjM0NT8iLCJpYXQiOjE2NTU5NjE1OTQsImV4cCI6MTY1NTk2MzM5NH0.8rJ-Khqw7AG73pm68DcyE0_Tc89RYzI_5D3xd6ckGUc"
+		},
+		{
+			"key": "secretKey",
+			"value": "ROADTOSDET",
+			"type": "string"
+		},
+		{
+			"key": "phone_number",
+			"value": "+8801717497927"
+		},
+		{
+			"key": "nid",
+			"value": "080717497927"
+		},
+		{
+			"key": "phoneNumber",
+			"value": "+8801413132086"
+		},
+		{
+			"key": "nidNumber",
+			"value": "080413132086"
+		},
+		{
+			"key": "id",
+			"value": 2339
+		},
+		{
+			"key": "updatedPhoneNumbers",
+			"value": "+8801910968332"
+		}
+	]
+}
